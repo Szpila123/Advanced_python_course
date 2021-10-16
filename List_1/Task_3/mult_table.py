@@ -1,6 +1,6 @@
 class MultTable():
     _MIN_LEN = 1
-    _max_num_idxs = [0, -1]
+    _MAX_NUM_IDXS = [0, -1]
 
     @classmethod
     def tabliczka(cls, x1: int, x2: int, y1: int, y2: int):
@@ -15,7 +15,7 @@ class MultTable():
 
         x.sort(), y.sort()
         width = max([len(str(x[idx_x] * y[idx_y]))
-                    for idx_x in cls._max_num_idxs for idx_y in cls._max_num_idxs])
+                    for idx_x in cls._MAX_NUM_IDXS for idx_y in cls._MAX_NUM_IDXS])
 
         mult_str = ' '.join([' ' * width] +
                             ['{:{width}d}'.format(num, width=width) for num in x]) + '\n'
