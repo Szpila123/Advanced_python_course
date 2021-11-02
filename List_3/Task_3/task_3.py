@@ -32,20 +32,22 @@ def rozklad_imperatywna(n: int) -> list[tuple[int, int]]:
 
 
 def rozklad_skladana(n: int) -> list[tuple[int, int]]:
-    return [(x, max([y for y in range(1, int(math.log(n, x)) + 1) if n % (x**y) == 0])) for x in primes(int(n**0.5)+1) if n % x == 0]
+    return [(x, max([y for y in range(1, int(math.log(n, x)) + 1) if n % (x**y) == 0])) for x in primes(n) if n % x == 0]
 
 
 def rozklad_funkcyjna(n: int) -> list[int]:
-    return list(filter(lambda x: x[1] > 0, map(lambda x: (x, max(itertools.takewhile(lambda p: n%x**p == 0, range(n)))), primes(int(n**0.5)+1))))
+    return list(filter(lambda x: x[1] > 0, map(lambda x: (x, max(itertools.takewhile(lambda p: n%(x**p) == 0, range(n)))), primes(n))))
 
 
 if __name__ == '__main__':
-    n = 10000
+    n = 1000
     number = 10000
 
-    print(rozklad_imperatywna(10000))
-    print(rozklad_skladana(10000))
-    print(rozklad_funkcyjna(10000))
+    for i in range (1, 100):
+        print(i, ":")
+        print(rozklad_imperatywna(i))
+        print(rozklad_skladana(i))
+        print(rozklad_funkcyjna(i))
 
     def test(f_name, n, number): return print(timeit.timeit(
         f'{f_name}({n})', setup=f'from __main__ import {f_name}', number=number))
