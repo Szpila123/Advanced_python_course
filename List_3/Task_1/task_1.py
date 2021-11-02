@@ -3,29 +3,26 @@ import functools
 import timeit
 
 
-def is_prime(n: int) -> bool:
-    for x in range(2, int(n**0.5)+1):
-        if n % x == 0:
-            return False
-    return True
-
-
 def pierwsze_imperatywna(n: int) -> list[int]:
     pierwsze = []
 
     for i in range(2, n+1):
-        if is_prime(i):
+        for x in range(2, int(i**0.5)+1):
+            if i % x == 0:
+                break
+        else:
             pierwsze.append(i)
 
     return pierwsze
 
 
 def pierwsze_skladana(n: int) -> list[int]:
-    return [x for x in range(2, (n+1)) if is_prime(x)]
+    temp_list = [[y for y in range(2, int(x**0.5)+1) if x % y == 0] for x in range(2, n+1)]
+    return [x for x in range(2, (n+1)) if len(temp_list[x-2]) == 0]
 
 
 def pierwsze_funkcyjna(n: int) -> list[int]:
-    return list(filter(is_prime, range(2, n+1)))
+    return list(filter(lambda x: all(map(lambda y: x%y != 0, range(2, int(x**0.5) + 1))), range(2, n+1)))
 
 
 if __name__ == '__main__':
