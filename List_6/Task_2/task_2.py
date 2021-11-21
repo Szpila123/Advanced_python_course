@@ -22,6 +22,7 @@ import signal
 import tempfile
 import difflib
 import time
+import traceback
 URL_RE = 'http://([a-zA-Z0-9]+\.)+[a-zA-Z]+'
 
 
@@ -116,7 +117,7 @@ def observe(urls: list[str], period: int, print_content: bool):
         print('Program was stopped, exiting...')
     except Exception as err:
         logging.error(f'Error occured: {err.args}, exiting...')
-        logging.error(f'{err.with_traceback()}')
+        traceback.print_exc()
 
     finally:
         for file in [entry['file'] for entry in cache.values()]:
