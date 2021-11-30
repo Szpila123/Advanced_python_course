@@ -94,35 +94,35 @@ def observe(urls: list[str], period: int, print_content: bool):
         with ThreadPoolExecutor() as executor:
             while(True):
                 for url, response in zip(urls, executor.map(get_page, urls)):
-
                     data_hash, data = response
 
-                    if not cache[url]['hash']:
-                        """First successful request"""
-                        cache[url]['hash'] = data_hash
-                        if print_content:
-                            print(f'Content of {url}:\n' + data)
-                        cache[url]['file'].write(bytes(data, 'utf-8'))
-                        cache[url]['file'].seek(0)
+                    if data_hash:
+                        if not cache[url]['hash']:
+                            """First successful request"""
+                            cache[url]['hash'] = data_hash
+                            if print_content:
+                                print(f'Content of {url}:\n' + data)
+                            cache[url]['file'].write(bytes(data, 'utf-8'))
+                            cache[url]['file'].seek(0)
 
-                    elif cache[url]['hash'] != data_hash:
-                        """Data changed"""
-                        file = cache[url]['file']
-                        diff = difflib.unified_diff(file.read().decode('utf-8').split(),
-                                                    data.split(), fromfile='Old', tofile='New')
-                        """Update content and hash"""
-                        file.truncate(0)
-                        file.write(bytes(data, 'utf-8'))
-                        file.seek(0)
-                        cache[url]['hash'] = data_hash
-                        """Print diff"""
-                        print(f'Content of {url} changed')
-                        if print_content:
-                            for line in diff:
-                                print(line)
-                    else:
-                        """Data is the same"""
-                        print(f'Contect of {url} is the same')
+                        elif cache[url]['hash'] != data_hash:
+                            """Data changed"""
+                            file = cache[url]['file']
+                            diff = difflib.unified_diff(file.read().decode('utf-8').split(),
+                                                        data.split(), fromfile='Old', tofile='New')
+                            """Update content and hash"""
+                            file.truncate(0)
+                            file.write(bytes(data, 'utf-8'))
+                            file.seek(0)
+                            cache[url]['hash'] = data_hash
+                            """Print diff"""
+                            print(f'Content of {url} changed')
+                            if print_content:
+                                for line in diff:
+                                    print(line)
+                        else:
+                            """Data is the same"""
+                            print(f'Contect of {url} is the same')
 
                 time.sleep(period)
 
