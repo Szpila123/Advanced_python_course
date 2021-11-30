@@ -13,6 +13,7 @@ Note: this program uses http, thus it's unsafe
 """
 
 import urllib.request
+import urllib.error
 import re
 import argparse
 import sys
@@ -73,12 +74,15 @@ def get_page(url: str) -> tuple[int, str]:
     print(f'Requesting: {url}')
 
     data_hash, data = 0, ""
-    with urllib.request.urlopen(url) as f:
-        if f.status == 200:
-            data = f.read().decode('utf-8')
-            data_hash = hash(data)
-        else:
-            print(f'{url} responeded with {f.status}, no diff created')
+    try:
+        with urllib.request.urlopen(url) as f:
+            if f.status == 200:
+                data = f.read().decode('utf-8')
+                data_hash = hash(data)
+            else:
+                print(f'{url} responeded with {f.status}, no diff created')
+    except urllib.error.HTTPError as error:
+        print(f'{url}: error {error}')
 
     return data_hash, data
 
